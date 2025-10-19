@@ -8,7 +8,8 @@ docker volume create <nombre volumen>
 ```
 
 ### Crear el volumen nombrado: vol-postgres
-# COMPLETAR CON EL COMANDO
+
+docker volume create vol-postgres
 
 ## MOUNTPOINT
 Un mountpoint se refiere al lugar en el sistema de archivos donde un dispositivo de almacenamiento se une (o monta) al sistema de archivos. Es el punto donde los archivos y directorios almacenados en ese dispositivo de almacenamiento son accesibles para el sistema operativo y las aplicaciones.
@@ -39,35 +40,46 @@ docker run -d --name <nombre contenedor> --mount type=volume,src=<nombre >,dst=<
 
 
 ### Crear la red net-drupal de tipo bridge
-# COMPLETAR CON EL COMANDO
+
+docker network create net-drupal
 
 ### Crear un servidor postgres vinculado a la red net-drupal, completar la ruta del contenedor
 ```
 docker run -d --name server-postgres -e POSTGRES_DB=db_drupal -e POSTGRES_PASSWORD=12345 -e POSTGRES_USER=user_drupal --network net-drupal postgres
 ```
+C:\Users\Josti>docker run -d --name server-postgres -e POSTGRES_DB=db_drupal -e POSTGRES_PASSWORD=12345 -e POSTGRES_USER=user_drupal -v vol-postgres:/var/lib/postgresql/data --network net-drupal postgres
 _No es necesario exponer el puerto, debido a que nos vamos a conectar desde la misma red de docker_
 
 ### Crear un cliente postgres vinculado a la red drupal a partir de la imagen dpage/pgadmin4, completar el correo
 ```
 docker run -d --name client-postgres --publish published=9500,target=80 -e PGADMIN_DEFAULT_PASSWORD=54321 -e PGADMIN_DEFAULT_EMAIL=<correo> --network net-drupal dpage/pgadmin4
 ```
+C:\Users\Josti>docker run -d --name client-postgres --publish published=9500,target=80 -e PGADMIN_DEFAULT_PASSWORD=54321 -e PGADMIN_DEFAULT_EMAIL=jostingxavier7@gmail.com --network net-drupal dpage/pgadmin4
 
 ### Usar el cliente postgres para conectarse al servidor postgres, para la conexión usar el nombre del servidor en lugar de la dirección IP.
 
 ### Crear los volúmenes necesarios para drupal, esto se puede encontrar en la documentación
-### COMPLETAR CON LOS COMANDOS
+docker volume create vol-drupal-sites
+docker volume create vol-drupal-modules
+docker volume create vol-drupal-themes
 
 ### Crear el contenedor server-drupal vinculado a la red, usar la imagen drupal, y vincularlo a los volúmenes nombrados
 ```
 docker run -d --name server-drupal --publish published=9700,target=80 -v <nombre volumen>:<ruta contenedor> -v <nombre volumen>:<ruta contenedor> -v <nombre volumen>:<ruta contenedor> -v <nombre volumen>:<ruta contenedor> --network net-drupal drupal
 ```
 
+C:\Users\Josti>docker run -d --name server-drupal --publish published=9700,target=80 -v vol-drupal-sites:/var/www/html/sites -v vol-drupal-modules:/var/www/html/modules -v vol-drupal-themes:/var/www/html/themes --network net-drupal drupal
+
 ### Ingrese al server-drupal y siga el paso a paso para la instalación.
-# COMPLETAR CON UNA CAPTURA DE PANTALLA DEL PASO 4
+<img width="1919" height="976" alt="image" src="https://github.com/user-attachments/assets/3cdd42ff-3705-4e7c-b80a-a6bd946ffb67" />
+<img width="1919" height="978" alt="image" src="https://github.com/user-attachments/assets/ed65471a-4d9b-4289-92eb-1f1905e0fb0c" />
+<img width="1919" height="1028" alt="image" src="https://github.com/user-attachments/assets/92ab2763-9f3b-45e4-bae9-17b9fb651f1a" />
+
 
 _La instalación puede tomar varios minutos, mientras espera realice un diagrama de los contenedores que ha creado en este apartado._
 
-# COMPLETAR CON EL DIAGRAMA SOLICITADO
+<img width="2431" height="1230" alt="image" src="https://github.com/user-attachments/assets/656611f0-84d2-4b56-a76b-6a8764a8d13a" />
+
 
 ### Eliminar un volumen específico
 ```
